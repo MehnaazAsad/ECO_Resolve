@@ -2,6 +2,7 @@ name: ECO_Vishnu_mocks_create
 
 channels:
   - defaults
+  - astropy
   - conda-forge
 
 dependencies:
@@ -16,6 +17,7 @@ dependencies:
   - seaborn>=0.8.1
   - scikit-learn>=0.19.1
   - sphinx
+  - halotools
   - pip
   - pip:
     - GitPython
