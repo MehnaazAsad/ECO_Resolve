@@ -12,3 +12,4 @@ cosmo-utils
 configparser
 sphinx-astropy
 sphinx_rtd_theme
+halotools
