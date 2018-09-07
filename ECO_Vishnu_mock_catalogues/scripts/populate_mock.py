@@ -18,6 +18,28 @@ import os
 
 def create_halocat_from_snapshot(col_ids,col_names,snapshot_file,\
                                  processing_notes):
+    """
+    Creates a halo catalog from snapshot
+
+    Parameters
+    ----------
+    col_ids: python array
+        array with column IDs to extract from snapshot
+
+    col_names: python array
+        array with column names to extract from snapshot
+    
+    snapshot_file: string
+        name of snapshot file
+    
+    processing_notes: string
+        Notes to add to halo catalog cache
+
+    Returns
+    ---------
+    halocat_file_path: string
+        Path to halo catalog
+    """
     rockstar_table = pd.read_table(snapshot_file,delimiter='\s+',\
                                compression='gzip',comment='#',\
                                usecols=col_ids,names=col_names)
@@ -59,18 +81,66 @@ def create_halocat_from_snapshot(col_ids,col_names,snapshot_file,\
     return halocat_file_path
 
 def access_halocat(halocat_file_path):
+    """
+    Accesses already stored halo catalog
+
+    Parameters
+    ----------
+    halocat_file_path: string
+        Path to halo catalog
+
+    Returns
+    ---------
+    halocat: hdf5 file
+        Mock halo catalog
+    """
     halocat = CachedHaloCatalog(fname=halocat_file_path,\
                                 update_cached_fname=True)
     broadcast_host_halo_property(halocat.halo_table,'halo_macc')
     return halocat
 
 def populate_mock(key,halocat):
+    """
+    Populates mock halo catalog with galaxies using Behroozi 2010 relation
+
+    Parameters
+    ----------
+    key: string
+        Halo mass property used to populate mock (halo_mvir or halo_macc)
+        
+    halocat: hdf5 file
+        Mock halo catalog
+
+    Returns
+    ---------
+    model: 
+        subhalo-based composite model
+    """
     model = PrebuiltSubhaloModelFactory('behroozi10',redshift=0.0186,\
                                         prim_haloprop_key=key) 
     model.populate_mock(halocat)
     return model
 
 def create_temp_hdf5(halo_table,gal_table):
+    """
+    Creates temporary hdf5 copies of halo and galaxy tables
+
+    Parameters
+    ----------
+    halo_table: Astropy table
+        Halo catalog
+        
+    gal_table: Astropy table
+        Galaxy catalog
+
+    Returns
+    ---------
+    halo_table_fname: string
+        Filename of temporary halo table
+    
+    galaxy_table_fname: string
+        Filename of temporary galaxy table
+    """
     halo_table_fname = 'halo_table_temp.hdf5'
     galaxy_table_fname = 'galaxy_table_temp.hdf5'
     halo_table.write(halo_table_fname,path='updated_data',\
@@ -80,6 +150,22 @@ def create_temp_hdf5(halo_table,gal_table):
     return halo_table_fname,galaxy_table_fname
     
 def merge_halocat_galcat(halo_catalog_fname,galaxy_catalog_fname):
+    """
+    Merges halo and galaxy catalogs
+
+    Parameters
+    ----------
+    halo_catalog_fname: string
+        Filename of temporary halo table
+    
+    galaxy_catalog_fname: string
+        Filename of temporary galaxy table
+
+    Returns
+    ---------
+    halocat_galcat_merged: Pandas dataframe
+        Merged dataframe containing halo and galaxy information    
+    """
     halo_pd = pd.read_hdf(halo_catalog_fname)
     gal_pd = pd.read_hdf(galaxy_catalog_fname)
     
@@ -90,6 +176,20 @@ def merge_halocat_galcat(halo_catalog_fname,galaxy_catalog_fname):
     return halocat_galcat_merged
 
 def centrals_satellites_flag(catalog):
+    """
+    Adds centrals and satellites flag to merged catalog using ID information
+
+    Parameters
+    ----------
+    catalog: Pandas dataframe
+        Merged catalog of halos and galaxies
+    
+    Returns
+    ---------
+    catalog: Pandas dataframe
+        Merged dataframe containing halo and galaxy information plus a 
+        centrals/satellites flag column
+    """
     C_S = []
     pbar = ProgressBar()
     
@@ -104,6 +204,14 @@ def centrals_satellites_flag(catalog):
     return catalog
     
 def args_parser():
+    """
+    Parsing arguments passed to populate_mock.py script
+
+    Returns
+    -------
+    args: 
+        Input arguments to the script
+    """
     print('Parsing in progress')
     parser = argparse.ArgumentParser()
     parser.add_argument('populate_mock_key',type=str,help='Halo mass type to '\
@@ -122,6 +230,15 @@ def args_parser():
     return args
 
 def main(args):
+    """
+    Main function that calls all other functions
+    
+    Parameters
+    ----------
+    args: 
+        Input arguments to the script
+
+    """
     cols_to_use = [1,5,6,10,11,12,17,18,19,20,21,22,39,60,61,62,63]
     col_names = ['halo_id','halo_pid','halo_upid','halo_mvir','halo_rvir',\
              'halo_rs','halo_x','halo_y','halo_z','halo_vx','halo_vy',\
@@ -170,6 +287,8 @@ def main(args):
     halocat_galcat_merged.to_hdf('../halo_gal_Vishnu_Rockstar_{0}.h5'.format\
                                  (args.populate_mock_key.split('_')[1]),\
                                  key='halocat_galcat_merged',mode='w')
+    
+    print('Removing temporary copies of catalogs')
     os.remove(halo_catalog_fname)
     os.remove(galaxy_catalog_fname)
     

@@ -22,6 +22,20 @@ rc('text', usetex=True)
 
 
 def stats_cens_func(cens_df,key):
+    """
+    Calculates statistics for array given the halo mass property that will be 
+    used to plot SMHM relation
+    
+    Parameters
+    ----------
+    cens_df: Pandas dataframe
+        Catalog consisting of only centrals
+
+    Returns
+    -------
+    stats_cens: Tuple
+        X-axis array, Y-axis array and std error for Y-axis
+    """
     if key == 'halo_mvir':
         stats_cens = Stats_one_arr(np.log10(cens_df.halo_mvir_host_halo.\
                                             values),np.log10(cens_df.\
@@ -33,6 +47,21 @@ def stats_cens_func(cens_df,key):
     return stats_cens
 
 def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
+    """
+    Plots SM-HM relation
+    
+    Parameters
+    ----------
+    halocat_galcat_merged: Pandas dataframe
+        Merged dataframe containing halo and galaxy information   
+        
+    mass_to_plot_key: string
+        Halo mass property that will be plotted on the X-axis
+        
+    populate_mock_key: string
+        Halo mass property used to populate mock
+
+    """
     print('    -> Separating centrals and satellites')
     cens = halocat_galcat_merged.loc[halocat_galcat_merged.C_S.values == 1]
     sats = halocat_galcat_merged.loc[halocat_galcat_merged.C_S.values == 0]
@@ -90,6 +119,14 @@ def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
                  (mass_to_plot_key.split('_')[1]))
     
 def args_parser():
+    """
+    Parsing arguments passed to populate_mock.py script
+
+    Returns
+    -------
+    args: 
+        Input arguments to the script
+    """
     print('Parsing in progress')
     parser = argparse.ArgumentParser()
     parser.add_argument('host_halo_mass_to_plot',type=str,help='Halo mass '\
@@ -102,6 +139,15 @@ def args_parser():
     return args
 
 def main(args):
+    """
+    Main function that calls all other functions
+    
+    Parameters
+    ----------
+    args: 
+        Input arguments to the script
+
+    """
     print('Reading galaxy catalog')
     halocat_galcat_merged = pd.read_hdf(args.catalog_to_use,\
                                         key='halocat_galcat_merged')
