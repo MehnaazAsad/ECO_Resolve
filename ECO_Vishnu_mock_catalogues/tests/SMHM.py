@@ -90,7 +90,7 @@ def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
                               '})$')
         plt.ylabel(r'$\mathrm{Stellar\ mass}/\mathrm{[\frac{M_\odot}{h}]})$')
         plt.title('SM-HM relation using {0} to populate mocks'.format\
-                  (populate_mock_key))
+                  (populate_mock_key.split('_')[1]))
 
 
     elif mass_to_plot_key == 'halo_macc':
@@ -110,7 +110,7 @@ def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
                               '})$')
         plt.ylabel(r'$\mathrm{Stellar\ mass}/\mathrm{[\frac{M_\odot}{h}]})$')
         plt.title('SM-HM relation using {0} to populate mocks'.format\
-                  (populate_mock_key))
+                  (populate_mock_key.split('_')[1]))
 
     
     plt.legend(loc='best')
