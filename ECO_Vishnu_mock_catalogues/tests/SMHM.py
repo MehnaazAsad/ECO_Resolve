@@ -21,7 +21,7 @@ rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']},size=15)
 rc('text', usetex=True)
 
 
-def stats_cens_func(cens_df,key):
+def stats_cens_func(cens_df,mass_to_plot_key):
     """
     Calculates statistics for array given the halo mass property that will be 
     used to plot SMHM relation
@@ -36,11 +36,11 @@ def stats_cens_func(cens_df,key):
     stats_cens: Tuple
         X-axis array, Y-axis array and std error for Y-axis
     """
-    if key == 'halo_mvir':
+    if mass_to_plot_key == 'halo_mvir':
         stats_cens = Stats_one_arr(np.log10(cens_df.halo_mvir_host_halo.\
                                             values),np.log10(cens_df.\
                                                   stellar_mass.values))
-    elif key == 'halo_macc':
+    elif mass_to_plot_key == 'halo_macc':
         stats_cens = Stats_one_arr(np.log10(cens_df.halo_macc_host_halo.\
                                             values),np.log10(cens_df.\
                                                   stellar_mass.values))
