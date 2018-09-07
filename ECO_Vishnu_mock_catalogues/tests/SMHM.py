@@ -66,10 +66,10 @@ def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
     cens = halocat_galcat_merged.loc[halocat_galcat_merged.C_S.values == 1]
     sats = halocat_galcat_merged.loc[halocat_galcat_merged.C_S.values == 0]
     print('    -> Overplotting Behroozi 2013 relation for centrals')
-    log_mstar_arr = np.linspace(halocat_galcat_merged.stellar_mass.values.min\
-                                (),halocat_galcat_merged.stellar_mass.values.\
-                                max(),100)
-    log_mstar_arr = np.log10(log_mstar_arr)
+    mstar_arr = np.linspace(halocat_galcat_merged.stellar_mass.values.min(),\
+                            halocat_galcat_merged.stellar_mass.values.max(),\
+                            100)
+    log_mstar_arr = np.log10(mstar_arr)
     log_halo_mass_behroozi = Behroozi_relation(log_mstar_arr,z=0.0186)
 
     
@@ -106,7 +106,7 @@ def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
                  label='Behroozi 2013')
         plt.errorbar(stats_cens[0],stats_cens[1],yerr=stats_cens[2],color='r',\
                      label='Centrals')
-        plt.xlabel(r'$\mathrm{Halo\ mass\ (mvir)}/\mathrm{[\frac{M_\odot}{h}]'\
+        plt.xlabel(r'$\mathrm{Halo\ mass\ (macc)}/\mathrm{[\frac{M_\odot}{h}]'\
                               '})$')
         plt.ylabel(r'$\mathrm{Stellar\ mass}/\mathrm{[\frac{M_\odot}{h}]})$')
         plt.title('SM-HM relation using {0} to populate mocks'.format\
@@ -149,7 +149,7 @@ def main(args):
 
     """
     print('Reading galaxy catalog')
-    halocat_galcat_merged = pd.read_hdf(args.catalog_to_use,\
+    halocat_galcat_merged = pd.read_hdf('../'+args.catalog_to_use,\
                                         key='halocat_galcat_merged')
     print('Plotting SMHM')
     plot_SMHM(halocat_galcat_merged,args.host_halo_mass_to_plot,\
