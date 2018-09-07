@@ -113,7 +113,8 @@ def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
                   (populate_mock_key.split('_')[1]))
 
     
-    plt.legend(loc='best')
+    plt.legend(loc='best',prop={'size': 6})
+    fig1.tight_layout()
     print('    -> Saving figure')
     fig1.savefig('../reports/SMHM_{0}_hosthalo.png'.format\
                  (mass_to_plot_key.split('_')[1]))
