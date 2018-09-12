@@ -111,7 +111,7 @@ def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
         plt.plot(log_halo_mass_B10,log_mstar_arr_B10,'-k',\
                  label='Behroozi 2010 cosmoutils')
         plt.errorbar(stats_cens_B13[0],stats_cens_B13[1],stats_cens_B13[2],\
-                     '-b',label='Behroozi 2013')
+                     color='b',label='Behroozi 2013')
         plt.errorbar(stats_cens[0],stats_cens[1],yerr=stats_cens[2],color='r',\
                      label='Centrals')
         plt.xlabel(r'$\mathrm{Halo\ mass\ (mvir)}/\mathrm{[\frac{M_\odot}{h}]'\
