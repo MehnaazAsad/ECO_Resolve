@@ -27,7 +27,7 @@ def f_x(x,alpha,delta,gamma):
 
 def behroozi_2013_cens(mhalo_arr):
     
-    epsilon = -1.777
+    epsilon = 100**(-1.777)
     M_1 = 10**(11.514)
     alpha = -1.412
     gamma = 0.316
