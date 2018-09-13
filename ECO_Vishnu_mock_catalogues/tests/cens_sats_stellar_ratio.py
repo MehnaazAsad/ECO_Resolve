@@ -68,7 +68,9 @@ def plot_cens_sats_stelratio(catalog):
     fig1 = plt.figure()
     plt.hist(stellar_ratio_subs_cens, bins=np.logspace(np.log10(0.01),\
                                                        np.log10(105), 100))
+    plt.xlabel(r'$\frac{\sum M_{\star ,satellite}}{M_{\star ,central}}$')   
     plt.gca().set_xscale("log")
+    plt.tight_layout()
     print('    -> Saving figure')
     fig1.savefig('../reports/stellar_ratio_dist.png')
     
