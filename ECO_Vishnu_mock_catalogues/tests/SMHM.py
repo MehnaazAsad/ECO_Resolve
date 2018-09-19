@@ -56,7 +56,7 @@ def stats_cens_func(cens_df,mass_to_plot_key):
         X-axis array, Y-axis array and std error for Y-axis
     """
     base = 0.4 #bin width in dex
-    bin_statval = 'left'
+    bin_statval = 'average'
     if mass_to_plot_key == 'halo_mvir':
         stats_cens = Stats_one_arr(np.log10(cens_df.halo_mvir_host_halo.\
                                             values),np.log10(cens_df.\
@@ -89,9 +89,7 @@ def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
     cens = halocat_galcat_merged.loc[halocat_galcat_merged.C_S.values == 1]
     sats = halocat_galcat_merged.loc[halocat_galcat_merged.C_S.values == 0]
     print('    -> Overplotting Behroozi 2010 relation for centrals (cosmoutils)')
-    mstar_arr = np.linspace(cens.stellar_mass.values.min(),\
-                            cens.stellar_mass.values.max(),\
-                            100)
+    mstar_arr = cens.stellar_mass.values
     log_mstar_arr_B10 = np.log10(mstar_arr)
     log_halo_mass_B10 = Behroozi_relation(log_mstar_arr_B10,z=0.0186)
     
