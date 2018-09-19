@@ -55,14 +55,15 @@ def stats_cens_func(cens_df,mass_to_plot_key):
     stats_cens: Tuple
         X-axis array, Y-axis array and std error for Y-axis
     """
+    bwidth_dex = 0.4
     if mass_to_plot_key == 'halo_mvir':
         stats_cens = Stats_one_arr(np.log10(cens_df.halo_mvir_host_halo.\
                                             values),np.log10(cens_df.\
-                                                  stellar_mass.values))
+                                            stellar_mass.values),base=bwidth_dex)
     elif mass_to_plot_key == 'halo_macc':
         stats_cens = Stats_one_arr(np.log10(cens_df.halo_macc_host_halo.\
                                             values),np.log10(cens_df.\
-                                                  stellar_mass.values))
+                                            stellar_mass.values),base=bwidth_dex)
     return stats_cens
 
 def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
@@ -97,11 +98,11 @@ def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
               (mass_to_plot_key))
         stats_cens = stats_cens_func(cens,mass_to_plot_key)
 
-        print('    -> Overplotting Behroozi 2013 relation for centrals')
-        halo_mass_B13 = cens.halo_mvir_host_halo.values
-        log_mstar_arr_B13 = behroozi_2013_cens(halo_mass_B13)
-        log_halo_mass_B13 = np.log10(halo_mass_B13)
-        stats_cens_B13 = Stats_one_arr(log_halo_mass_B13,log_mstar_arr_B13)
+#        print('    -> Overplotting Behroozi 2013 relation for centrals')
+#        halo_mass_B13 = cens.halo_mvir_host_halo.values
+#        log_mstar_arr_B13 = behroozi_2013_cens(halo_mass_B13)
+#        log_halo_mass_B13 = np.log10(halo_mass_B13)
+#        stats_cens_B13 = Stats_one_arr(log_halo_mass_B13,log_mstar_arr_B13)
 
         print('    -> Plotting')
         fig1 = plt.figure()
@@ -110,8 +111,8 @@ def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
                     alpha=0.5,label='Satellites')
         plt.plot(log_halo_mass_B10,log_mstar_arr_B10,'-k',\
                  label='Behroozi 2010 cosmoutils')
-        plt.errorbar(stats_cens_B13[0],stats_cens_B13[1],stats_cens_B13[2],\
-                     color='b',label='Behroozi 2013')
+#        plt.errorbar(stats_cens_B13[0],stats_cens_B13[1],stats_cens_B13[2],\
+#                     color='b',label='Behroozi 2013')
         plt.errorbar(stats_cens[0],stats_cens[1],yerr=stats_cens[2],color='r',\
                      label='Centrals')
         plt.xlabel(r'$\mathrm{Halo\ mass\ (mvir)}/\mathrm{[\frac{M_\odot}{h}]'\
