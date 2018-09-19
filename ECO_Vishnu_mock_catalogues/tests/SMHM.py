@@ -94,7 +94,8 @@ def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
                             cens.stellar_mass.values.max(),\
                             1000000)
     log_mstar_arr_B10 = np.log10(mstar_arr)
-    log_halo_mass_B10 = Behroozi10SmHm.mean_log_halo_mass(log_mstar_arr_B10,\
+    log_halo_mass_B10 = Behroozi10SmHm.mean_log_halo_mass(log_stellar_mass=\
+                                                          log_mstar_arr_B10,\
                                                           redshift=0.0186)
     
         
