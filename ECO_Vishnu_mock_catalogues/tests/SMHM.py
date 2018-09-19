@@ -56,7 +56,7 @@ def stats_cens_func(cens_df,mass_to_plot_key):
         X-axis array, Y-axis array and std error for Y-axis
     """
     base = 0.4 #bin width in dex
-    bin_statval = 'left'
+    bin_statval = 'average'
     if mass_to_plot_key == 'halo_mvir':
         stats_cens = Stats_one_arr(np.log10(cens_df.halo_mvir_host_halo.\
                                             values),np.log10(cens_df.\
