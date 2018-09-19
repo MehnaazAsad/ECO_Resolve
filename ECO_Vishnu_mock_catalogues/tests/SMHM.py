@@ -55,15 +55,18 @@ def stats_cens_func(cens_df,mass_to_plot_key):
     stats_cens: Tuple
         X-axis array, Y-axis array and std error for Y-axis
     """
-    bwidth_dex = 0.4
+    base = 0.4 #bin width in dex
+    bin_statval = 'left'
     if mass_to_plot_key == 'halo_mvir':
         stats_cens = Stats_one_arr(np.log10(cens_df.halo_mvir_host_halo.\
                                             values),np.log10(cens_df.\
-                                            stellar_mass.values),base=bwidth_dex)
+                                            stellar_mass.values),\
+                                            base=base,bin_statval=bin_statval)
     elif mass_to_plot_key == 'halo_macc':
         stats_cens = Stats_one_arr(np.log10(cens_df.halo_macc_host_halo.\
                                             values),np.log10(cens_df.\
-                                            stellar_mass.values),base=bwidth_dex)
+                                            stellar_mass.values),\
+                                            base=base,bin_statval=bin_statval)
     return stats_cens
 
 def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
