@@ -8,8 +8,6 @@ Created on Wed Sep 12 12:08:10 2018
 
 import matplotlib
 matplotlib.use('Agg')
-from halotools.utils import group_member_generator
-from astropy.table import Table
 import matplotlib.pyplot as plt
 from matplotlib import rc
 import pandas as pd
@@ -43,24 +41,25 @@ def plot_cens_sats_stelratio(catalog):
     sats_grp_by_halohostid = sats.groupby(['halo_hostid'])
     sats_keys = sats_grp_by_halohostid.groups.keys()
     
-    print('    -> Calculating total stellar mass of satellites per group')
-    total_grp_stellar_mass = []
+    print('    -> Getting stellar masses of all satellites per group')
+    sats_per_grp_stellar_mass = []
     for key in sats_keys:
-        grp_stellar_mass = sats_grp_by_halohostid.get_group(key).\
-                           stellar_mass.sum()
-        total_grp_stellar_mass.append(grp_stellar_mass)
+        sats_stellar_mass = sats_grp_by_halohostid.get_group(key).\
+                            stellar_mass.values
+        sats_per_grp_stellar_mass.append(sats_stellar_mass)
         
-    grp_stellar_mass_hosthaloid_dict = dict(zip(sats_keys,\
-                                                total_grp_stellar_mass))
+    sats_per_grp_stellar_mass_hosthaloid_dict = dict(zip(sats_keys,\
+                                                sats_per_grp_stellar_mass))
     
     print('    -> Calculating ratio')
     stellar_ratio_subs_cens = []
     for index,cens_halohostid in enumerate(cens_subset.halo_hostid.values):
         try:
-            grp_stellar_mass = grp_stellar_mass_hosthaloid_dict[cens_halohostid]
+            sats_per_grp_stellar_mass = sats_per_grp_stellar_mass_hosthaloid_dict[cens_halohostid]
             cen_stellar_mass = cens_subset.stellar_mass.values[index]
-            ratio = grp_stellar_mass/cen_stellar_mass
-            stellar_ratio_subs_cens.append(ratio)
+            for value in sats_per_grp_stellar_mass:
+                ratio = value/cen_stellar_mass
+                stellar_ratio_subs_cens.append(ratio)
         except:
             stellar_ratio_subs_cens.append(0)
     
@@ -74,12 +73,6 @@ def plot_cens_sats_stelratio(catalog):
     print('    -> Saving figure')
     fig1.savefig('../reports/stellar_ratio_dist.png')
     
-#    sats_tb = Table.from_pandas(sats)
-#    sats_tb.sort('halo_hostid') 
-#    grouping_key = 'halo_hostid'
-#    requested_columns = ['stellar_mass']
-#    group_gen = group_member_generator(sats_tb, grouping_key, requested_columns)
-        
 def args_parser():
     """
     Parsing arguments passed to populate_mock.py script
