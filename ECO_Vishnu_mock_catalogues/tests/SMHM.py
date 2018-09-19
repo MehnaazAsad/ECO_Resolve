@@ -89,7 +89,7 @@ def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
     print('    -> Separating centrals and satellites')
     cens = halocat_galcat_merged.loc[halocat_galcat_merged.C_S.values == 1]
     sats = halocat_galcat_merged.loc[halocat_galcat_merged.C_S.values == 0]
-    print('    -> Overplotting Behroozi 2010 relation for centrals (cosmoutils)')
+    print('    -> Overplotting Behroozi 2010 relation for centrals (halotools)')
     mstar_arr = np.linspace(cens.stellar_mass.values.min(),\
                             cens.stellar_mass.values.max(),\
                             1000000)
