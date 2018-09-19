@@ -33,7 +33,7 @@ def plot_cens_sats_stelratio(catalog):
     cens = catalog.loc[catalog.C_S.values == 1]
     sats = catalog.loc[catalog.C_S.values == 0]
     
-    cens_subset = cens[['halo_hostid','stellar_mass']]
+    cens_subset = cens[['halo_hostid','stellar_mass','halo_macc_host_halo']]
     sats = sats.sort_values(by='halo_hostid')      
     cens_subset = cens_subset.sort_values(by='halo_hostid')
     
@@ -53,11 +53,18 @@ def plot_cens_sats_stelratio(catalog):
     
     print('    -> Calculating ratio')
     stellar_ratio_subs_cens = []
+    halo_mass = []
+    stellar_mass_cens = []
+    stellar_mass_sats = []
     for index,cens_halohostid in enumerate(cens_subset.halo_hostid.values):
         try:
             sats_per_grp_stellar_mass = sats_per_grp_stellar_mass_hosthaloid_dict[cens_halohostid]
             cen_stellar_mass = cens_subset.stellar_mass.values[index]
+            host_halo_mass = cens_subset.halo_macc_host_halo.values[index]
             for value in sats_per_grp_stellar_mass:
+                halo_mass.append(host_halo_mass)
+                stellar_mass_cens.append(cen_stellar_mass)
+                stellar_mass_sats.append(value)
                 ratio = value/cen_stellar_mass
                 stellar_ratio_subs_cens.append(ratio)
         except:
@@ -67,11 +74,23 @@ def plot_cens_sats_stelratio(catalog):
     fig1 = plt.figure()
     plt.hist(stellar_ratio_subs_cens, bins=np.logspace(np.log10(0.01),\
                                                        np.log10(105), 100))
-    plt.xlabel(r'$\frac{\sum M_{\star ,satellite}}{M_{\star ,central}}$')   
+    plt.xlabel(r'$\frac{M_{\star ,satellite}}{M_{\star ,central}}$')   
     plt.gca().set_xscale("log")
     plt.tight_layout()
     print('    -> Saving figure')
     fig1.savefig('../reports/stellar_ratio_dist.png')
+    
+    print('    -> Plotting distribution')
+    fig2 = plt.figure()
+    plt.scatter(np.log10(halo_mass),np.log10(stellar_mass_sats),c='grey')
+    plt.scatter(np.log10(halo_mass),np.log10(stellar_mass_cens),c='red')
+    plt.xlabel(r'$\mathrm{Halo\ mass\ (macc)}/\mathrm{[\frac{M_\odot}{h}]})$') 
+    plt.ylabel(r'$\mathrm{Stellar\ mass}/\mathrm{[\frac{M_\odot}{h}]})$')
+    plt.tight_layout()
+    print('    -> Saving figure')
+    fig2.savefig('../reports/SMHM.png')
+
+    
     
 def args_parser():
     """
