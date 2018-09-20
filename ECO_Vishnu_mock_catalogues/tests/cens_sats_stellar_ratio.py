@@ -56,6 +56,8 @@ def plot_cens_sats_stelratio(catalog):
     halo_mass = []
     stellar_mass_cens = []
     stellar_mass_sats = []
+    counter_stellar_mass_sats_higher = 0
+    counter_ratio_bigger_than_one = 0
     for index,cens_halohostid in enumerate(cens_subset.halo_hostid.values):
         try:
             sats_per_grp_stellar_mass = sats_per_grp_stellar_mass_hosthaloid_dict[cens_halohostid]
@@ -65,10 +67,18 @@ def plot_cens_sats_stelratio(catalog):
                 halo_mass.append(host_halo_mass)
                 stellar_mass_cens.append(cen_stellar_mass)
                 stellar_mass_sats.append(value)
+                if value > cen_stellar_mass:
+                    counter_stellar_mass_sats_higher+=1
                 ratio = value/cen_stellar_mass
+                if ratio > 1:
+                    counter_ratio_bigger_than_one+=1
                 stellar_ratio_subs_cens.append(ratio)
         except:
             stellar_ratio_subs_cens.append(0)
+    print('    -> Number of satellites more massive than their centrals:{0}'.\
+          format(counter_stellar_mass_sats_higher))
+    print('    -> Number of satellites whose ratio is bigger than one:{0}'.\
+          format(counter_ratio_bigger_than_one))
     
     print('    -> Plotting distribution')
     fig1 = plt.figure()
@@ -80,12 +90,15 @@ def plot_cens_sats_stelratio(catalog):
     print('    -> Saving figure')
     fig1.savefig('../reports/stellar_ratio_dist.png')
     
-    print('    -> Plotting distribution')
+    print('    -> Plotting SMHM')
     fig2 = plt.figure()
-    plt.scatter(np.log10(halo_mass),np.log10(stellar_mass_sats),c='grey')
-    plt.scatter(np.log10(halo_mass),np.log10(stellar_mass_cens),c='red')
+    plt.scatter(np.log10(halo_mass),np.log10(stellar_mass_sats),c='grey',\
+                alpha=0.6,label='Satellites',s=5)
+    plt.scatter(np.log10(halo_mass),np.log10(stellar_mass_cens),c='red',\
+                alpha=0.7,label='Centrals',s=5)
     plt.xlabel(r'$\mathrm{Halo\ mass\ (macc)}/\mathrm{[\frac{M_\odot}{h}]})$') 
     plt.ylabel(r'$\mathrm{Stellar\ mass}/\mathrm{[\frac{M_\odot}{h}]})$')
+    plt.legend(loc='best',prop={'size': 6})
     plt.tight_layout()
     print('    -> Saving figure')
     fig2.savefig('../reports/SMHM.png')
