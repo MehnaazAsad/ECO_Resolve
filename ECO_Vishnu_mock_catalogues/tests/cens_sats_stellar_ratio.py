@@ -91,7 +91,7 @@ def plot_cens_sats_stelratio(catalog):
     fig1.savefig('../reports/stellar_ratio_dist.png')
     
     print('    -> Plotting SMHM')
-    fig2 = plt.figure()
+    fig2 = plt.figure(figsize=(10,8))
     plt.scatter(np.log10(halo_mass),np.log10(stellar_mass_sats),c='grey',\
                 alpha=0.6,label='Satellites',s=5)
     plt.scatter(np.log10(halo_mass),np.log10(stellar_mass_cens),c='red',\
@@ -101,7 +101,7 @@ def plot_cens_sats_stelratio(catalog):
     plt.legend(loc='best',prop={'size': 6})
     plt.tight_layout()
     print('    -> Saving figure')
-    fig2.savefig('../reports/SMHM.png')
+    fig2.savefig('../reports/SMHM.pdf')
 
     
     
