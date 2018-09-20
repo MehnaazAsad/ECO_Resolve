@@ -13,10 +13,8 @@ from multiprocessing import Pool
 import matplotlib.pyplot as plt
 from scipy import interpolate
 from matplotlib import rc
-import seaborn as sns
 import pandas as pd
 import numpy as np
-import argparse
 import sympy
 import math
 import csv
@@ -203,7 +201,7 @@ M_test = [result_func(val,phi_star_num,M_star_num,alpha_num) for val in n_num]
 
 
 ### Halo data
-halocat_galcat_merged = pd.read_hdf('../halo_gal_Vishnu_Rockstar_macc.h5',\
+halocat_galcat_merged = pd.read_hdf('../data/halo_gal_Vishnu_Rockstar_macc.h5',\
                                     key='halocat_galcat_merged')
 v_sim = 130**3 #(Mpc/h)^3
 vpeak = halocat_galcat_merged.halo_vpeak.values
@@ -231,6 +229,6 @@ halo_Mr_sham = pool.map(resultfunc_helper,job_args)
 halo_Mr_sham = np.ndarray.flatten(np.array(halo_Mr_sham))
 
 ### Writing vpeak and Mr values to text file
-with open('../SHAM_parallel.csv', 'w') as f:
+with open('../data/SHAM_parallel.csv', 'w') as f:
     writer = csv.writer(f, delimiter='\t')
     writer.writerows(zip(vpeak,halo_Mr_sham))
