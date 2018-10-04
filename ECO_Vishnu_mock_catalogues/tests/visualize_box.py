@@ -31,11 +31,19 @@ mock_catalog_tiled_slice = mock_catalog_tiled.\
                            loc[mock_catalog_tiled.z.values >= -5]
 mock_catalog_tiled_slice = mock_catalog_tiled.\
                            loc[mock_catalog_tiled.z.values <= 5]
+                           
+colour_r = (1 + (mock_catalog_tiled_slice.x.values/130))/2                   
+colour_g = (1 + (mock_catalog_tiled_slice.y.values/130))/2                   
+colour_b = (1 + (mock_catalog_tiled_slice.z.values/130))/2     
+
+colour_rgb = [[colour_r[index],colour_g[index],colour_b[index]] for index in\
+              range(len(mock_catalog_tiled_slice))]
+colour_rgb = np.array(colour_rgb)
 
 fig1 = plt.figure()
 ax = fig1.add_subplot(111, projection='3d')
 ax.scatter(mock_catalog_tiled_slice['x'],mock_catalog_tiled_slice['y'],\
-           mock_catalog_tiled_slice['z'])
+           mock_catalog_tiled_slice['z'],c=colour_rgb)
 ax.set_xlabel('x (Mpc/h)')
 ax.set_ylabel('y (Mpc/h)')
 ax.set_zlabel('z (Mpc/h)')
