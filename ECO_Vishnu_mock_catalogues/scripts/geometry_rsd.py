@@ -155,19 +155,21 @@ vel_tot_arr = np.zeros(ngal)
 vel_pec_arr = np.zeros(ngal)
 for x in tqdm(range(ngal)):
     dist_from_obs = (np.sum(cart_gals[x]**2))**.5
-    cz_local = speed_c * comodist_z_interp(dist_from_obs)
-    cz_val = cz_local
+    z_cosm = comodist_z_interp(dist_from_obs)
+    cz_cosm = speed_c * z_cosm
+    cz_val = cz_cosm
     ra,dec = cart_to_spherical_coords(cart_gals[x],dist_from_obs)
     vr = np.dot(cart_gals[x], vel_gals[x])/dist_from_obs
-    cz_val += vr*(1+redshift_median)
+    #this cz includes hubble flow and peculiar motion
+    cz_val += vr*(1+z_cosm) 
     vel_tot = (np.sum(vel_gals[x]**2))**.5
     vel_tan = (vel_tot**2 - vr**2)**.5
-    vel_pec  = (cz_val - cz_local)/(1 + redshift_median)
+    vel_pec  = (cz_val - cz_cosm)/(1 + z_cosm)
     dist_from_obs_arr[x] = dist_from_obs
     ra_arr[x] = ra
     dec_arr[x] = dec
     cz_arr[x] = cz_val
-    cz_nodist_arr[x] = cz_local
+    cz_nodist_arr[x] = cz_cosm
     vel_tot_arr[x] = vel_tot
     vel_tan_arr[x] = vel_tan
     vel_pec_arr[x] = vel_pec
