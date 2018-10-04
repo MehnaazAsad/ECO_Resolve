@@ -6,8 +6,6 @@ Created on Thu Sep 27 16:22:26 2018
 @author: asadm2
 """
 
-from astropy.coordinates import cartesian_to_spherical
-from halotools.mock_observables import ra_dec_z
 from astropy.cosmology import FlatLambdaCDM
 from mpl_toolkits.mplot3d import Axes3D
 from scipy.interpolate import interp1d
@@ -183,10 +181,6 @@ mock_catalog_tiled['vel_tot'] = vel_tot_arr
 mock_catalog_tiled['vel_tan'] = vel_tan_arr
 mock_catalog_tiled['vel_pec'] = vel_pec_arr
 
-mock_catalog_tiled = mock_catalog_tiled.loc[(mock_catalog_tiled['ra'] >= 0) \
-                                            & (mock_catalog_tiled['ra'] <= 180)]
-mock_catalog_tiled = mock_catalog_tiled.loc[(mock_catalog_tiled['dec'] >= -90) \
-                                            & (mock_catalog_tiled['dec'] <= 90)]
 mock_catalog_tiled = mock_catalog_tiled.loc[(mock_catalog_tiled['cz'] >= 2530) \
                                             & (mock_catalog_tiled['cz'] <= 8000)]
 mock_catalog_tiled = mock_catalog_tiled.reset_index()
@@ -194,18 +188,18 @@ mock_catalog_tiled = mock_catalog_tiled.reset_index()
 mock_catalog_tiled.to_hdf('../data/ECO_Vishnu_mock_catalog_tiled.h5',\
                           key='mock_catalog_tiled',mode='w')
 
-mock_catalog_tiled = pd.read_hdf('../data/ECO_Vishnu_mock_catalog_tiled.h5',\
-                                    key='mock_catalog_tiled')
-
-fig1 = plt.figure()
-ax = fig1.add_subplot(111, projection='3d')
-ax.scatter(mock_catalog_tiled['x'], mock_catalog_tiled['y'], mock_catalog_tiled['z'])
-ax.set_xlabel('x (Mpc)')
-ax.set_ylabel('y (Mpc)')
-ax.set_zlabel('z (Mpc)')
-ax.set_xlim(-130,130)
-ax.set_ylim(-130,130)
-ax.set_zlim(-130,130)
-#ax.view_init(90, 0)
-plt.grid(None,'minor')
-plt.savefig('../reports/figures/3d_tiled_sim_slice.png')
+#mock_catalog_tiled = pd.read_hdf('../data/ECO_Vishnu_mock_catalog_tiled.h5',\
+#                                    key='mock_catalog_tiled')
+#
+#fig1 = plt.figure()
+#ax = fig1.add_subplot(111, projection='3d')
+#ax.scatter(mock_catalog_tiled['x'], mock_catalog_tiled['y'], mock_catalog_tiled['z'])
+#ax.set_xlabel('x (Mpc/h)')
+#ax.set_ylabel('y (Mpc/h)')
+#ax.set_zlabel('z (Mpc/h)')
+#ax.set_xlim(-130,130)
+#ax.set_ylim(-130,130)
+#ax.set_zlim(-130,130)
+##ax.view_init(0, 90)
+#plt.grid(None,'minor')
+#plt.savefig('../reports/figures/3d_tiled_sim_slice_2.png')
