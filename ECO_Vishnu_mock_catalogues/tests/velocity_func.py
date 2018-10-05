@@ -75,22 +75,22 @@ Stats_one_arr_vpeak_sats = Stats_one_arr(np.log10(mock_catalog_tiled_sats.\
 #plt.savefig('../reports/figures/vre_vpeak.png')
 
 fig1 = plt.figure()
-plt.scatter(Stats_one_arr_vre_sats[0],Stats_one_arr_vre_sats[1],color='b',\
+plt.plot(Stats_one_arr_vre_sats[0],Stats_one_arr_vre_sats[1],color='b',\
             label='v_re satellites')
 plt.fill_between(Stats_one_arr_vre_sats[0],Stats_one_arr_vre_sats[1]+\
                  Stats_one_arr_vre_sats[2],Stats_one_arr_vre_sats[1]-\
                  Stats_one_arr_vre_sats[2],color='b')
-plt.scatter(Stats_one_arr_vre_cens[0],Stats_one_arr_vre_cens[1],color='r',\
+plt.plot(Stats_one_arr_vre_cens[0],Stats_one_arr_vre_cens[1],color='r',\
             label='v_re centrals')
 plt.fill_between(Stats_one_arr_vre_cens[0],Stats_one_arr_vre_cens[1]+\
                  Stats_one_arr_vre_cens[2],Stats_one_arr_vre_cens[1]-\
                  Stats_one_arr_vre_cens[2],color='r')
-plt.scatter(Stats_one_arr_vpeak_sats[0],Stats_one_arr_vpeak_sats[1],color='b',\
+plt.plot(Stats_one_arr_vpeak_sats[0],Stats_one_arr_vpeak_sats[1],color='b',\
             label='v_peak satellites',linestyle='-.')
 plt.fill_between(Stats_one_arr_vpeak_sats[0],Stats_one_arr_vpeak_sats[1]+\
                  Stats_one_arr_vpeak_sats[2],Stats_one_arr_vpeak_sats[1]-\
                  Stats_one_arr_vpeak_sats[2],color='b',alpha=0.4)
-plt.scatter(Stats_one_arr_vpeak_cens[0],Stats_one_arr_vpeak_cens[1],color='r',\
+plt.plot(Stats_one_arr_vpeak_cens[0],Stats_one_arr_vpeak_cens[1],color='r',\
             label='v_peak centrals',linestyle='-.')
 plt.fill_between(Stats_one_arr_vpeak_cens[0],Stats_one_arr_vpeak_cens[1]+\
                  Stats_one_arr_vpeak_cens[2],Stats_one_arr_vpeak_cens[1]-\
