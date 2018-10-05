@@ -26,6 +26,8 @@ def velocity_func(r,r_s,r_vir,M_vir):
 mock_catalog_tiled = pd.read_hdf('../data/ECO_Vishnu_mock_catalog_tiled.h5',\
                                     key='mock_catalog_tiled')
 
+mock_catalog_tiled = mock_catalog_tiled.loc[mock_catalog_tiled.Re.values >= 0]
+
 mock_catalog_tiled_sats = mock_catalog_tiled.loc[mock_catalog_tiled['C_S'] == 0] 
 mock_catalog_tiled_cens = mock_catalog_tiled.loc[mock_catalog_tiled['C_S'] == 1] 
 
