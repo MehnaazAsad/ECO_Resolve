@@ -74,7 +74,8 @@ Stats_one_arr_vpeak_sats = Stats_one_arr(np.log10(mock_catalog_tiled_sats.\
 #plt.legend(loc='best')
 #plt.savefig('../reports/figures/vre_vpeak.png')
 
-fig1 = plt.figure()
+fig1 = plt.figure(figsize=(10,8))
+plt.subplot(221)
 plt.plot(Stats_one_arr_vre_sats[0],Stats_one_arr_vre_sats[1],color='b',\
             label='v_re satellites')
 plt.fill_between(Stats_one_arr_vre_sats[0],Stats_one_arr_vre_sats[1]+\
@@ -85,18 +86,57 @@ plt.plot(Stats_one_arr_vre_cens[0],Stats_one_arr_vre_cens[1],color='r',\
 plt.fill_between(Stats_one_arr_vre_cens[0],Stats_one_arr_vre_cens[1]+\
                  Stats_one_arr_vre_cens[2],Stats_one_arr_vre_cens[1]-\
                  Stats_one_arr_vre_cens[2],color='r')
+plt.xlabel(r'$log_{10}\ R_{e}$[kpc]')
+plt.ylabel(r'$log_{10}\ v$[km/s]')
+plt.legend(loc='best')
+
+plt.subplot(222)
+plt.plot(Stats_one_arr_vpeak_sats[0],Stats_one_arr_vpeak_sats[1],color='b',\
+            label='v_peak satellites',linestyle='-.')
+plt.fill_between(Stats_one_arr_vpeak_sats[0],Stats_one_arr_vpeak_sats[1]+\
+                 Stats_one_arr_vpeak_sats[2],Stats_one_arr_vpeak_sats[1]-\
+                 Stats_one_arr_vpeak_sats[2],color='b')
+plt.plot(Stats_one_arr_vpeak_cens[0],Stats_one_arr_vpeak_cens[1],color='r',\
+            label='v_peak centrals',linestyle='-.')
+plt.fill_between(Stats_one_arr_vpeak_cens[0],Stats_one_arr_vpeak_cens[1]+\
+                 Stats_one_arr_vpeak_cens[2],Stats_one_arr_vpeak_cens[1]-\
+                 Stats_one_arr_vpeak_cens[2],color='r')
+plt.xlabel(r'$log_{10}\ R_{e}$[kpc]')
+plt.ylabel(r'$log_{10}\ v$[km/s]')
+plt.legend(loc='best')
+
+plt.subplot(223)
 plt.plot(Stats_one_arr_vpeak_sats[0],Stats_one_arr_vpeak_sats[1],color='b',\
             label='v_peak satellites',linestyle='-.')
 plt.fill_between(Stats_one_arr_vpeak_sats[0],Stats_one_arr_vpeak_sats[1]+\
                  Stats_one_arr_vpeak_sats[2],Stats_one_arr_vpeak_sats[1]-\
                  Stats_one_arr_vpeak_sats[2],color='b',alpha=0.4)
+plt.plot(Stats_one_arr_vre_sats[0],Stats_one_arr_vre_sats[1],color='b',\
+            label='v_re satellites',alpha=0.4)
+plt.fill_between(Stats_one_arr_vre_sats[0],Stats_one_arr_vre_sats[1]+\
+                 Stats_one_arr_vre_sats[2],Stats_one_arr_vre_sats[1]-\
+                 Stats_one_arr_vre_sats[2],color='b',alpha=0.4)
+plt.xlabel(r'$log_{10}\ R_{e}$[kpc]')
+plt.ylabel(r'$log_{10}\ v$[km/s]')
+plt.legend(loc='best')
+
+plt.subplot(224)
 plt.plot(Stats_one_arr_vpeak_cens[0],Stats_one_arr_vpeak_cens[1],color='r',\
             label='v_peak centrals',linestyle='-.')
 plt.fill_between(Stats_one_arr_vpeak_cens[0],Stats_one_arr_vpeak_cens[1]+\
                  Stats_one_arr_vpeak_cens[2],Stats_one_arr_vpeak_cens[1]-\
-                 Stats_one_arr_vpeak_cens[2],color='r',alpha=0.4)
+                 Stats_one_arr_vpeak_cens[2],color='r')
+plt.plot(Stats_one_arr_vre_cens[0],Stats_one_arr_vre_cens[1],color='r',\
+            label='v_re centrals',alpha=0.4)
+plt.fill_between(Stats_one_arr_vre_cens[0],Stats_one_arr_vre_cens[1]+\
+                 Stats_one_arr_vre_cens[2],Stats_one_arr_vre_cens[1]-\
+                 Stats_one_arr_vre_cens[2],color='r',alpha=0.4)
 plt.xlabel(r'$log_{10}\ R_{e}$[kpc]')
-plt.ylabel(r'$log_{10}\$ v[km/s]')
+plt.ylabel(r'$log_{10}\ v$[km/s]')
 plt.legend(loc='best')
-plt.savefig('../reports/figures/vre_vpeak_shaded_error.png')
+
+plt.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=0.25,
+                    wspace=0.35)
+plt.savefig('../reports/figures/vre_vpeak_cens_sats.png')
+
 
