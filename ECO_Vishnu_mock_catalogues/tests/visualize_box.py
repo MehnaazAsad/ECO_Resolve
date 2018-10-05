@@ -29,8 +29,8 @@ mock_catalog_tiled['z'] = z
 
 mock_catalog_tiled_slice = mock_catalog_tiled.\
                            loc[mock_catalog_tiled.z.values >= -5]
-mock_catalog_tiled_slice = mock_catalog_tiled.\
-                           loc[mock_catalog_tiled.z.values <= 5]
+mock_catalog_tiled_slice = mock_catalog_tiled_slice.\
+                           loc[mock_catalog_tiled_slice.z.values <= 5]
                            
 colour_r = (1 + (mock_catalog_tiled_slice.x.values/130))/2                   
 colour_g = (1 + (mock_catalog_tiled_slice.y.values/130))/2                   
