@@ -113,10 +113,11 @@ plt.fill_between(Stats_one_arr_vpeak_sats[0],Stats_one_arr_vpeak_sats[1]+\
                  Stats_one_arr_vpeak_sats[2],color='b',alpha=0.4)
 plt.plot(Stats_one_arr_vre_sats[0],Stats_one_arr_vre_sats[1],color='b',\
             label='v_re satellites')
-plt.fill_between(Stats_one_arr_vre_sats[0],Stats_one_arr_vre_sats[1]+\
+fb = plt.fill_between(Stats_one_arr_vre_sats[0],Stats_one_arr_vre_sats[1]+\
                  Stats_one_arr_vre_sats[2],Stats_one_arr_vre_sats[1]-\
                  Stats_one_arr_vre_sats[2],color='b',alpha=0.4,edgecolor='k',\
                  linewidth=2)
+fb.set_edgecolor('k')
 plt.xlabel(r'$log_{10}\ R_{e}\ $[kpc]')
 plt.ylabel(r'$log_{10}\ v\ $[km/s]')
 plt.legend(loc='best')
@@ -129,10 +130,11 @@ plt.fill_between(Stats_one_arr_vpeak_cens[0],Stats_one_arr_vpeak_cens[1]+\
                  Stats_one_arr_vpeak_cens[2],color='r',alpha=0.4)
 plt.plot(Stats_one_arr_vre_cens[0],Stats_one_arr_vre_cens[1],color='r',\
             label='v_re centrals')
-plt.fill_between(Stats_one_arr_vre_cens[0],Stats_one_arr_vre_cens[1]+\
+fb = plt.fill_between(Stats_one_arr_vre_cens[0],Stats_one_arr_vre_cens[1]+\
                  Stats_one_arr_vre_cens[2],Stats_one_arr_vre_cens[1]-\
                  Stats_one_arr_vre_cens[2],color='r',alpha=0.4,edgecolor='k',\
                  linewidth=2)
+fb.set_edgecolor('k')
 plt.xlabel(r'$log_{10}\ R_{e}\ $[kpc]')
 plt.ylabel(r'$log_{10}\ v\ $[km/s]')
 plt.legend(loc='best')
