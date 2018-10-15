@@ -4,6 +4,9 @@
 Created on Wed Sep 12 12:08:10 2018
 
 @author: asadm2
+
+This script calculates the ratio of stellar mass of satellites and stellar
+mass of their central per host halo
 """
 
 import matplotlib
@@ -20,7 +23,7 @@ rc('text', usetex=True)
 
 def plot_cens_sats_stelratio(catalog):
     """
-    Plots distribution of ratio of total stellar mass of satellites and 
+    Plots distribution of ratio of stellar mass of satellites and 
     stellar mass of central galaxy per host halo
     
     Parameters
@@ -51,7 +54,8 @@ def plot_cens_sats_stelratio(catalog):
     sats_per_grp_stellar_mass_hosthaloid_dict = dict(zip(sats_keys,\
                                                 sats_per_grp_stellar_mass))
     
-    print('    -> Calculating ratio')
+    print('    -> Calculating ratio and checking how many satellites are more'
+          'massive than their central')
     stellar_ratio_subs_cens = []
     halo_mass = []
     stellar_mass_cens = []
@@ -88,22 +92,20 @@ def plot_cens_sats_stelratio(catalog):
     plt.gca().set_xscale("log")
     plt.tight_layout()
     print('    -> Saving figure')
-    fig1.savefig('../reports/stellar_ratio_dist.png')
+    fig1.savefig('../reports/figures/stellar_ratio_dist.png')
     
     print('    -> Plotting SMHM')
     fig2 = plt.figure(figsize=(10,8))
     plt.scatter(np.log10(halo_mass),np.log10(stellar_mass_sats),c='grey',\
-                alpha=0.6,label='Satellites',s=5)
+                alpha=0.8,label='Satellites',s=5)
     plt.scatter(np.log10(halo_mass),np.log10(stellar_mass_cens),c='red',\
-                alpha=0.7,label='Centrals',s=5)
+                alpha=0.9,label='Centrals',s=5)
     plt.xlabel(r'$\mathrm{Halo\ mass\ (macc)}/\mathrm{[\frac{M_\odot}{h}]})$') 
     plt.ylabel(r'$\mathrm{Stellar\ mass}/\mathrm{[\frac{M_\odot}{h}]})$')
     plt.legend(loc='best',prop={'size': 6})
     plt.tight_layout()
     print('    -> Saving figure')
-    fig2.savefig('../reports/SMHM.pdf')
-
-    
+    fig2.savefig('../reports/figures/SMHM.png')
     
 def args_parser():
     """
