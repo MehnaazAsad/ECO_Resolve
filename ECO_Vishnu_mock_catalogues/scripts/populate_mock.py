@@ -4,6 +4,9 @@
 Created on Mon Sep  3 08:55:51 2018
 
 @author: asadm2
+
+This script creates a halo catalog from Vishnu snapshot, populates the catalog
+with galaxies and adds a centrals/satellites (1/0) flag
 """
 
 from halotools.empirical_models import PrebuiltSubhaloModelFactory
@@ -43,7 +46,8 @@ def create_halocat_from_snapshot(col_ids,col_names,snapshot_file,\
     rockstar_table = pd.read_table(snapshot_file,delimiter='\s+',\
                                compression='gzip',comment='#',\
                                usecols=col_ids,names=col_names)
-
+    
+    #Mpc
     rockstar_table.halo_rvir = rockstar_table.halo_rvir/1000 
     rockstar_table.halo_rs = rockstar_table.halo_rs/1000
     
