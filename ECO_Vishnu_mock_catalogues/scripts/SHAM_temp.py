@@ -128,7 +128,7 @@ M_test = [result_func(val,phi_star_num,M_star_num,alpha_num) for val in n_num]
 #plt.legend(loc='best')
 #plt.show()
 
-'''
+
 ### Halo data
 halocat_galcat_merged = pd.read_hdf('../data/halo_gal_Vishnu_Rockstar_macc.h5',\
                                     key='halocat_galcat_merged')
@@ -161,4 +161,3 @@ halo_Mr_sham = np.ndarray.flatten(np.array(halo_Mr_sham))
 with open('../data/SHAM_parallel.csv', 'w') as f:
     writer = csv.writer(f, delimiter='\t')
     writer.writerows(zip(vpeak,halo_Mr_sham))
-'''
