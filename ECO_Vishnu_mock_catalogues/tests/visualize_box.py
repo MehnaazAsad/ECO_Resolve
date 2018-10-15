@@ -17,6 +17,20 @@ import pandas as pd
 import numpy as np
 
 def spherical_to_cartesian(mock_catalog_tiled):
+    """
+    Converts spherical RA,DEC,cz to cartesian x,y,z
+
+    Parameters
+    ----------
+    mock_catalog_tiled: Pandas dataframe
+        Mock catalog tiled 8 times with redshift space distortions applied
+    
+    Returns
+    ---------
+    mock_catalog_tiled: Pandas dataframe
+        Mock catalog with cartesian x,y,z position information added
+    """
+
     H0 = 70
     d = mock_catalog_tiled.cz.values/H0
     RA = mock_catalog_tiled.ra.values 
@@ -32,6 +46,16 @@ def spherical_to_cartesian(mock_catalog_tiled):
     return mock_catalog_tiled
 
 def plot_full_sphere(mock_catalog_tiled):
+    """
+    Plots full sphere consisting of all galaxies in catalog in x,y,z
+
+    Parameters
+    ----------
+    mock_catalog_tiled: Pandas dataframe
+        Mock catalog tiled 8 times
+    
+    """
+
     fig1 = plt.figure()
     ax = fig1.add_subplot(111, projection='3d')
     ax.scatter(mock_catalog_tiled['x'],mock_catalog_tiled['y'],\
@@ -48,6 +72,16 @@ def plot_full_sphere(mock_catalog_tiled):
     plt.savefig('../reports/figures/3d_tiled_sim.png')
 
 def plot_sphere_slice(mock_catalog_tiled):
+    """
+    Plots sphere sliced along z axis
+
+    Parameters
+    ----------
+    mock_catalog_tiled: Pandas dataframe
+        Mock catalog tiled 8 times
+    
+    """
+
     mock_catalog_tiled_slice = mock_catalog_tiled.\
                                loc[mock_catalog_tiled.z.values >= -5]
     mock_catalog_tiled_slice = mock_catalog_tiled_slice.\
@@ -77,6 +111,11 @@ def plot_sphere_slice(mock_catalog_tiled):
     plt.savefig('../reports/figures/3d_tiled_sim_slice_z.png')
 
 def main():
+    """
+    Main function that calls all other functions
+    
+    """
+
     mock_catalog_tiled = pd.read_hdf('../data/ECO_Vishnu_mock_catalog_tiled.h5',\
                                      key='mock_catalog_tiled')
     
