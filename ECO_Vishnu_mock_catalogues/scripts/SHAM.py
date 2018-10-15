@@ -154,23 +154,31 @@ def SHAM(n_vpeak_arr,params_noextrap):
 def main():
     
     ### Data file used
+    print('Reading ECO catalog')
     eco_obs_catalog = pd.read_csv('../data/gal_Lr_Mb_Re.txt',\
                                   delimiter='\s+',header=None,skiprows=2,\
                                   names=['M_r','logmbary','Re'])
+    print('Making Re cut')
     eco_obs_catalog = eco_obs_catalog.loc[eco_obs_catalog.Re.values >= 0]
 
     ### Halo data
     halo_gal_file = 'halo_gal_Vishnu_Rockstar_macc.h5'
+    print('Reading halo catalog')
     halocat_galcat_merged = pd.read_hdf('../data/' + halo_gal_file,\
                                         key='halocat_galcat_merged')
+    print('Curve fitting Schechter function')
     params_noextrap = curve_fit_schechter(eco_obs_catalog)
+    print('Inverting Schechter function')
     inverted_schechter_func = invert_schechter_func()
+    print('Testing inversion')
     test_invert_schechter_func(params_noextrap,inverted_schechter_func)
+    print('Interpolating vpeak of halos at n')
     vpeak,n_vpeak_arr = interp_halo_vpeak(halocat_galcat_merged)
+    print('Carrying out SHAM')
     halo_Mr_sham = SHAM(n_vpeak_arr,params_noextrap)
-
+    print('Writing SHAM results to file')
     ## Writing vpeak and Mr values to text file
-    with open('../data/SHAM_parallel.csv', 'w') as f:
+    with open('../data/SHAM_parallel_new_script.csv', 'w') as f:
         writer = csv.writer(f, delimiter='\t')
         writer.writerows(zip(vpeak,halo_Mr_sham))
 
