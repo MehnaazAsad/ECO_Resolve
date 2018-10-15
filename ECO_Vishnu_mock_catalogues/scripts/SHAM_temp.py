@@ -76,12 +76,8 @@ min_Mr_cut = min(Mr_cut)
 nbins = 25 #better chi-squared than 35 from num_bins function
 
 ### Calculate differential number density using function
-bin_centers_cut,bin_edges_cut,n_Mr_cut,err_poiss_cut = diff_num_dens(Mr_cut,\
-                                                                     nbins,\
-                                                                     None,\
-                                                                     v_eco,\
-                                                                     mag_bool=\
-                                                                     True)
+bin_centers_cut,bin_edges_cut,n_Mr_cut,err_poiss_cut = \
+diff_num_dens(Mr_cut,nbins,None,v_eco,mag_bool=True)
 
 p0 = [10**-2,-20,-1.2] #initial guess for phi_star,M_star,alpha
 
@@ -137,12 +133,8 @@ halocat_galcat_merged = pd.read_hdf('../data/halo_gal_Vishnu_Rockstar_macc.h5',\
 v_sim = 130**3 #(Mpc/h)^3
 vpeak = halocat_galcat_merged.halo_vpeak.values
 nbins = num_bins(vpeak)
-bin_centers_vpeak,bin_edges_vpeak,n_vpeak,err_poiss = diff_num_dens(vpeak,\
-                                                                    nbins,\
-                                                                    None,\
-                                                                    v_sim,\
-                                                                    mag_bool=\
-                                                                    False)
+bin_centers_vpeak,bin_edges_vpeak,n_vpeak,err_poiss = \
+diff_num_dens(vpeak,nbins,None,v_sim,mag_bool=False)
 
 f_h = interpolate.InterpolatedUnivariateSpline(bin_centers_vpeak,n_vpeak)
 
