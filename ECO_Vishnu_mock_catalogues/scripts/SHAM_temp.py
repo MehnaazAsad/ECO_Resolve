@@ -60,6 +60,8 @@ eco_obs_catalog = pd.read_csv('../data/gal_Lr_Mb_Re.txt',\
                               delimiter='\s+',header=None,skiprows=2,\
                               names=['M_r','logmbary','Re'])
 
+eco_obs_catalog = eco_obs_catalog.loc[eco_obs_catalog.Re.values >= 0]
+
 Mr_all = eco_obs_catalog.M_r.values
 Mr_unique = np.unique(eco_obs_catalog.M_r.values)
 v_eco = 192351.36 #Volume of ECO with buffer in (Mpc/h)^3
