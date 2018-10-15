@@ -4,17 +4,31 @@
 Created on Thu Sep 27 16:22:26 2018
 
 @author: asadm2
+
+This script makes a tiled simulation box and applies redshift-space distortions
 """
 
 from astropy.cosmology import FlatLambdaCDM
-from mpl_toolkits.mplot3d import Axes3D
 from scipy.interpolate import interp1d
-import matplotlib.pyplot as plt
 from tqdm import tqdm
 import pandas as pd
 import numpy as np
 
 def tile_sim_box(mock_catalog):
+    """
+    Creates 3d 2x2 box by tiling 130 Mpc/h Vishnu box 8 times
+
+    Parameters
+    ----------
+    mock_catalog: Pandas dataframe
+        Galaxy catalog with SHAM carried out
+    
+    Returns
+    ---------
+    mock_catalog_temp: Pandas dataframe
+        Mock catalog tiled 8 times
+    """
+    
     ## Box 1
     mock_catalog_original = mock_catalog.loc[mock_catalog['M_r'] <= -17.33]
     mock_catalog_original = mock_catalog_original.reset_index()
@@ -84,12 +98,14 @@ def cart_to_spherical_coords(cart_arr, dist):
     """
     Computes the right ascension and declination for the given 
     point in (x,y,z) position
+    
     Parameters
     -----------
     cart_arr: numpy.ndarray, shape (3,)
         array with (x,y,z) positions
     dist: float
         dist to the point from observer's position
+        
     Returns
     -----------
     ra_val: float
@@ -97,6 +113,7 @@ def cart_to_spherical_coords(cart_arr, dist):
     dec_val: float
         declination of the point on the sky
     """
+    
     ## Reformatting coordinates
     # Cartesian coordinates
     (   x_val,
@@ -114,7 +131,7 @@ def cart_to_spherical_coords(cart_arr, dist):
             ra_val = -90.
     else:
         ra_val = np.degrees(np.arctan(y_val/x_val))
-    ##
+
     ## Seeing on which quadrant the point is at
     if x_val < 0.:
         ra_val += 180.
@@ -123,85 +140,103 @@ def cart_to_spherical_coords(cart_arr, dist):
 
     return ra_val, dec_val
 
-mock_catalog = pd.read_hdf('../data/ECO_Vishnu_mock_catalog.h5',\
-                           key='mock_catalog')    
-mock_catalog_tiled = tile_sim_box(mock_catalog)
+def apply_rsd(mock_catalog_tiled):
+    """
+    Applies redshift-space distortions
 
-ngal = len(mock_catalog_tiled)
-speed_c = 3*10**5 #km/s
-z_min = 0
-z_max = 0.5
-dz = 10**-3
-H0 = 70
-omega_m = 0.25
-omega_b = 0.04
-redshift_median = 0.021723 #median redshift of ECO
+    Parameters
+    ----------
+    mock_catalog_tiled: Pandas dataframe
+        Mock catalog tiled 8 times
+    
+    Returns
+    ---------
+    mock_catalog_tiled: Pandas dataframe
+        Tiled mock catalog with redshift-space distortions now applied and
+        ra,dec,rsd positions and velocity information added
+    """
 
-redshift_arr = np.arange(z_min,z_max,dz)
-cosmo = FlatLambdaCDM(H0,omega_m,omega_b)
-como_dist = cosmo.comoving_distance(redshift_arr)
-comodist_z_interp = interp1d(como_dist,redshift_arr)
+    ngal = len(mock_catalog_tiled)
+    speed_c = 3*10**5 #km/s
+    z_min = 0
+    z_max = 0.5
+    dz = 10**-3
+    H0 = 70
+    omega_m = 0.25
+    omega_b = 0.04
+    
+    redshift_arr = np.arange(z_min,z_max,dz)
+    cosmo = FlatLambdaCDM(H0,omega_m,omega_b)
+    como_dist = cosmo.comoving_distance(redshift_arr)
+    comodist_z_interp = interp1d(como_dist,redshift_arr)
+    
+    cart_gals = mock_catalog_tiled[['x','y','z']].values
+    vel_gals = mock_catalog_tiled[['vx','vy','vz']].values
+    
+    dist_from_obs_arr = np.zeros(ngal)
+    ra_arr = np.zeros(ngal)
+    dec_arr = np.zeros(ngal)
+    cz_arr = np.zeros(ngal)
+    cz_nodist_arr = np.zeros(ngal)
+    vel_tan_arr = np.zeros(ngal)
+    vel_tot_arr = np.zeros(ngal)
+    vel_pec_arr = np.zeros(ngal)
+    for x in tqdm(range(ngal)):
+        dist_from_obs = (np.sum(cart_gals[x]**2))**.5
+        z_cosm = comodist_z_interp(dist_from_obs)
+        cz_cosm = speed_c * z_cosm
+        cz_val = cz_cosm
+        ra,dec = cart_to_spherical_coords(cart_gals[x],dist_from_obs)
+        vr = np.dot(cart_gals[x], vel_gals[x])/dist_from_obs
+        #this cz includes hubble flow and peculiar motion
+        cz_val += vr*(1+z_cosm) 
+        vel_tot = (np.sum(vel_gals[x]**2))**.5
+        vel_tan = (vel_tot**2 - vr**2)**.5
+        vel_pec  = (cz_val - cz_cosm)/(1 + z_cosm)
+        dist_from_obs_arr[x] = dist_from_obs
+        ra_arr[x] = ra
+        dec_arr[x] = dec
+        cz_arr[x] = cz_val
+        cz_nodist_arr[x] = cz_cosm
+        vel_tot_arr[x] = vel_tot
+        vel_tan_arr[x] = vel_tan
+        vel_pec_arr[x] = vel_pec
+    
+    mock_catalog_tiled['r_dist'] = dist_from_obs_arr
+    mock_catalog_tiled['ra'] = ra_arr
+    mock_catalog_tiled['dec'] = dec_arr
+    mock_catalog_tiled['cz'] = cz_arr
+    mock_catalog_tiled['cz_nodist'] = cz_nodist_arr
+    mock_catalog_tiled['vel_tot'] = vel_tot_arr
+    mock_catalog_tiled['vel_tan'] = vel_tan_arr
+    mock_catalog_tiled['vel_pec'] = vel_pec_arr
+    return mock_catalog_tiled
 
-cart_gals = mock_catalog_tiled[['x','y','z']].values
-vel_gals = mock_catalog_tiled[['vx','vy','vz']].values
+def main():
+    #Read mock catalog
+    mock_catalog = pd.read_hdf('../data/ECO_Vishnu_mock_catalog.h5',\
+                               key='mock_catalog')  
+    
+    #Tile simulation box 8 times 
+    mock_catalog_tiled = tile_sim_box(mock_catalog)
+    
+    #Apply redshift-space distortions
+    mock_catalog_tiled_rsd = apply_rsd(mock_catalog_tiled)
+    
+    #Apply cz cut
+    mock_catalog_tiled_rsd = mock_catalog_tiled_rsd.loc[(mock_catalog_tiled_rsd\
+                                                         ['cz'] >= 2530)& \
+                                                        (mock_catalog_tiled_rsd\
+                                                         ['cz'] <= 8000)]
+    
+    #Reset dataframe indices
+    mock_catalog_tiled_rsd.reset_index(drop=True,inplace=True)
+    
+    #Write final catalog
+    mock_catalog_tiled_rsd.to_hdf('../data/ECO_Vishnu_mock_catalog_tiled_rsd.h5',\
+                                  key='mock_catalog_tiled',mode='w')
+    
+# Main function
+if __name__ == '__main__':
+    main()
 
-dist_from_obs_arr = np.zeros(ngal)
-ra_arr = np.zeros(ngal)
-dec_arr = np.zeros(ngal)
-cz_arr = np.zeros(ngal)
-cz_nodist_arr = np.zeros(ngal)
-vel_tan_arr = np.zeros(ngal)
-vel_tot_arr = np.zeros(ngal)
-vel_pec_arr = np.zeros(ngal)
-for x in tqdm(range(ngal)):
-    dist_from_obs = (np.sum(cart_gals[x]**2))**.5
-    z_cosm = comodist_z_interp(dist_from_obs)
-    cz_cosm = speed_c * z_cosm
-    cz_val = cz_cosm
-    ra,dec = cart_to_spherical_coords(cart_gals[x],dist_from_obs)
-    vr = np.dot(cart_gals[x], vel_gals[x])/dist_from_obs
-    #this cz includes hubble flow and peculiar motion
-    cz_val += vr*(1+z_cosm) 
-    vel_tot = (np.sum(vel_gals[x]**2))**.5
-    vel_tan = (vel_tot**2 - vr**2)**.5
-    vel_pec  = (cz_val - cz_cosm)/(1 + z_cosm)
-    dist_from_obs_arr[x] = dist_from_obs
-    ra_arr[x] = ra
-    dec_arr[x] = dec
-    cz_arr[x] = cz_val
-    cz_nodist_arr[x] = cz_cosm
-    vel_tot_arr[x] = vel_tot
-    vel_tan_arr[x] = vel_tan
-    vel_pec_arr[x] = vel_pec
-
-mock_catalog_tiled['r_dist'] = dist_from_obs_arr
-mock_catalog_tiled['ra'] = ra_arr
-mock_catalog_tiled['dec'] = dec_arr
-mock_catalog_tiled['cz'] = cz_arr
-mock_catalog_tiled['cz_nodist'] = cz_nodist_arr
-mock_catalog_tiled['vel_tot'] = vel_tot_arr
-mock_catalog_tiled['vel_tan'] = vel_tan_arr
-mock_catalog_tiled['vel_pec'] = vel_pec_arr
-
-mock_catalog_tiled = mock_catalog_tiled.loc[(mock_catalog_tiled['cz'] >= 2530) \
-                                            & (mock_catalog_tiled['cz'] <= 8000)]
-mock_catalog_tiled = mock_catalog_tiled.reset_index()
-
-mock_catalog_tiled.to_hdf('../data/ECO_Vishnu_mock_catalog_tiled.h5',\
-                          key='mock_catalog_tiled',mode='w')
-
-#mock_catalog_tiled = pd.read_hdf('../data/ECO_Vishnu_mock_catalog_tiled.h5',\
-#                                    key='mock_catalog_tiled')
-#
-#fig1 = plt.figure()
-#ax = fig1.add_subplot(111, projection='3d')
-#ax.scatter(mock_catalog_tiled['x'], mock_catalog_tiled['y'], mock_catalog_tiled['z'])
-#ax.set_xlabel('x (Mpc/h)')
-#ax.set_ylabel('y (Mpc/h)')
-#ax.set_zlabel('z (Mpc/h)')
-#ax.set_xlim(-130,130)
-#ax.set_ylim(-130,130)
-#ax.set_zlim(-130,130)
-##ax.view_init(0, 90)
-#plt.grid(None,'minor')
-#plt.savefig('../reports/figures/3d_tiled_sim_slice_2.png')
