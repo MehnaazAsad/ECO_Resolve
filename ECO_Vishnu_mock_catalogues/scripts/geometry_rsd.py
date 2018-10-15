@@ -213,6 +213,11 @@ def apply_rsd(mock_catalog_tiled):
     return mock_catalog_tiled
 
 def main():
+    """
+    Main function that calls all other functions
+    
+    """
+
     #Read mock catalog
     mock_catalog = pd.read_hdf('../data/ECO_Vishnu_mock_catalog.h5',\
                                key='mock_catalog')  
