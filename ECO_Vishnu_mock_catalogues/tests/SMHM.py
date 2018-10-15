@@ -4,11 +4,13 @@
 Created on Wed Sep  5 22:06:18 2018
 
 @author: asadm2
+
+This script plots the SMHM relation from catalog for centrals and satellites
+and overplots the Behroozi 2010 relation for centrals
 """
 
 import matplotlib
 matplotlib.use('Agg')
-#from cosmo_utils.mock_catalogues.shmr_funcs import Behroozi_relation
 from halotools.empirical_models import PrebuiltSubhaloModelFactory
 from cosmo_utils.utils.stats_funcs import Stats_one_arr
 import matplotlib.pyplot as plt
@@ -20,26 +22,6 @@ import argparse
 ###Formatting for plots
 rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']},size=15)
 rc('text', usetex=True)
-
-def f_x(x,alpha,delta,gamma):
-    result = -np.log10(10**(alpha*x)+1) + delta*((np.log10(1+np.exp(x)))**\
-                       gamma)/(1+np.exp(10**(-x)))
-    return result
-
-def behroozi_2013_cens(mhalo_arr):
-    
-    epsilon = 10**(-1.777)
-    M_1 = 10**(11.514)
-    alpha = -1.412
-    gamma = 0.316
-    delta = 3.508
-    
-    f_0 = f_x(0,alpha,delta,gamma)
-    x = np.log10(mhalo_arr/M_1)
-    f_log_Mh_M1 = f_x(x,alpha,delta,gamma)
-    
-    log_mstar_arr_B13 = np.log10(epsilon*M_1) + f_log_Mh_M1 - f_0
-    return log_mstar_arr_B13
     
 def stats_cens_func(cens_df,mass_to_plot_key):
     """
@@ -89,6 +71,7 @@ def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
     print('    -> Separating centrals and satellites')
     cens = halocat_galcat_merged.loc[halocat_galcat_merged.C_S.values == 1]
     sats = halocat_galcat_merged.loc[halocat_galcat_merged.C_S.values == 0]
+    
     print('    -> Overplotting Behroozi 2010 relation for centrals (halotools)')
     mstar_arr = np.linspace(cens.stellar_mass.values.min(),\
                             cens.stellar_mass.values.max(),\
@@ -106,11 +89,6 @@ def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
               (mass_to_plot_key))
         stats_cens = stats_cens_func(cens,mass_to_plot_key)
 
-#        print('    -> Overplotting Behroozi 2013 relation for centrals')
-#        halo_mass_B13 = cens.halo_mvir_host_halo.values
-#        log_mstar_arr_B13 = behroozi_2013_cens(halo_mass_B13)
-#        log_halo_mass_B13 = np.log10(halo_mass_B13)
-#        stats_cens_B13 = Stats_one_arr(log_halo_mass_B13,log_mstar_arr_B13)
 
         print('    -> Plotting')
         fig1 = plt.figure()
@@ -119,8 +97,6 @@ def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
                     alpha=0.5,label='Satellites')
         plt.plot(log_halo_mass_B10,log_mstar_arr_B10,'-k',\
                  label='Behroozi 2010 cosmoutils')
-#        plt.errorbar(stats_cens_B13[0],stats_cens_B13[1],stats_cens_B13[2],\
-#                     color='b',label='Behroozi 2013')
         plt.errorbar(stats_cens[0],stats_cens[1],yerr=stats_cens[2],color='r',\
                      label='Centrals')
         plt.xlabel(r'$\mathrm{Halo\ mass\ (mvir)}/\mathrm{[\frac{M_\odot}{h}]'\
@@ -153,7 +129,7 @@ def plot_SMHM(halocat_galcat_merged,mass_to_plot_key,populate_mock_key):
     plt.legend(loc='best',prop={'size': 6})
     fig1.tight_layout()
     print('    -> Saving figure')
-    fig1.savefig('../reports/SMHM_{0}_hosthalo.png'.format\
+    fig1.savefig('../reports/figures/SMHM_{0}_hosthalo.png'.format\
                  (mass_to_plot_key.split('_')[1]))
     
 def args_parser():
