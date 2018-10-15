@@ -23,7 +23,7 @@ def velocity_re_func(r,r_s,r_vir,M_vir):
     result = const*(np.sqrt(num/denom))
     return result
 
-mock_catalog_tiled = pd.read_hdf('../data/ECO_Vishnu_mock_catalog_tiled.h5',\
+mock_catalog_tiled = pd.read_hdf('../data/ECO_Vishnu_mock_catalog_tiled_rsd.h5',\
                                     key='mock_catalog_tiled')
 
 mock_catalog_tiled = mock_catalog_tiled.loc[mock_catalog_tiled.Re.values >= 0]
@@ -135,7 +135,7 @@ eco_obs_catalog = pd.read_csv('../data/gal_Lr_Mb_Re.txt',\
 eco_obs_catalog = eco_obs_catalog.loc[eco_obs_catalog.Re.values >= 0]
 Stats_one_arr_re_mr = Stats_one_arr(np.log10(eco_obs_catalog.Re.values),\
                                     eco_obs_catalog.M_r.values,base=0.4)
-fig1 = plt.figure(figsize=(10,8))
+fig2 = plt.figure(figsize=(10,8))
 plt.plot(Stats_one_arr_re_mr[0],Stats_one_arr_re_mr[1],color='r',\
          linestyle='-.')
 fb = plt.fill_between(Stats_one_arr_re_mr[0],Stats_one_arr_re_mr[1]+\
@@ -147,7 +147,7 @@ plt.ylabel(r'$M_{r}$')
 plt.gca().invert_yaxis()
 plt.show()
 
-fig1 = plt.figure(figsize=(10,8))
+fig3 = plt.figure(figsize=(10,8))
 plt.scatter(np.log10(eco_obs_catalog.Re.values),eco_obs_catalog.M_r.values)
 plt.xlabel(r'$log_{10}\ R_{e}\ $[kpc]')
 plt.ylabel(r'$M_{r}$')
