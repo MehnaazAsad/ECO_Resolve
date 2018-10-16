@@ -224,6 +224,8 @@ def main():
     
     #Tile simulation box 8 times 
     mock_catalog_tiled = tile_sim_box(mock_catalog)
+    mock_catalog_tiled = mock_catalog_tiled.drop(['index'],axis=1)
+
     
     #Apply redshift-space distortions
     mock_catalog_tiled_rsd = apply_rsd(mock_catalog_tiled)
@@ -239,7 +241,7 @@ def main():
     
     #Write final catalog
     mock_catalog_tiled_rsd.to_hdf('../data/ECO_Vishnu_mock_catalog_tiled_rsd.h5',\
-                                  key='mock_catalog_tiled',mode='w')
+                                  key='mock_catalog_tiled',mode='w',complevel=7)
     
 # Main function
 if __name__ == '__main__':
