@@ -136,6 +136,7 @@ nbins = num_bins(vpeak)
 bin_centers_vpeak,bin_edges_vpeak,n_vpeak,err_poiss = \
 diff_num_dens(vpeak,nbins,None,v_sim,mag_bool=False)
 
+### Interpolating 
 f_h = interpolate.InterpolatedUnivariateSpline(bin_centers_vpeak,n_vpeak)
 
 pbar = ProgressBar(maxval=len(vpeak))

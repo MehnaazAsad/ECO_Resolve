@@ -243,14 +243,14 @@ def main(args):
         Input arguments to the script
 
     """
-    cols_to_use = [1,5,6,10,11,12,17,18,19,20,21,22,39,60,61,62,63]
+    cols_to_use = [1,5,6,10,11,12,16,17,18,19,20,21,22,39,60,61,62,63]
     col_names = ['halo_id','halo_pid','halo_upid','halo_mvir','halo_rvir',\
-             'halo_rs','halo_x','halo_y','halo_z','halo_vx','halo_vy',\
-             'halo_vz','halo_m200b','halo_macc','halo_mpeak','halo_vacc',\
-             'halo_vpeak']
+             'halo_rs','halo_vmax','halo_x','halo_y','halo_z','halo_vx',\
+             'halo_vy','halo_vz','halo_m200b','halo_macc','halo_mpeak',\
+             'halo_vacc','halo_vpeak']
     snapshot_file = 'hlist_0.98169.list.gz'
     processing_notes = 'Positions, IDs (HID,PID,UPID),velocities '\
-                       '(vpeak and vacc), radius (rvir,rs) and mass '\
+                       '(vpeak, vacc and vmax), radius (rvir,rs) and mass '\
                        'information extracted (mvir,macc,m200,mpeak) '\
                        'from original snapshot'
                        

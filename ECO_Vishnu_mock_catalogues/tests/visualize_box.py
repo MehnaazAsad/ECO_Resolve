@@ -9,8 +9,8 @@ This script plots the galaxies in 3d with rsd positions as axis values
 to make sure that it's a sphere and also slices along the z axis to make
 sure it has an inner ring corresponding to the lower cz limit of ECO
 """
-import matplotlib as mpl
-mpl.use('agg')
+#import matplotlib as mpl
+#mpl.use('agg')
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -63,13 +63,14 @@ def plot_full_sphere(mock_catalog_tiled):
     ax.set_xlabel('x (Mpc/h)')
     ax.set_ylabel('y (Mpc/h)')
     ax.set_zlabel('z (Mpc/h)')
-    ax.set_xlim(-130,130)
-    ax.set_ylim(-130,130)
-    ax.set_zlim(-130,130)
+#    ax.set_xlim(-130,130)
+#    ax.set_ylim(-130,130)
+#    ax.set_zlim(-130,130)
     ax.set_aspect("equal")
     #ax.view_init(0, 90)
     plt.grid(None,'minor')
-    plt.savefig('../reports/figures/3d_tiled_sim.png')
+    plt.show()
+#    plt.savefig('../reports/figures/3d_tiled_sim.png')
 
 def plot_sphere_slice(mock_catalog_tiled):
     """
@@ -108,7 +109,8 @@ def plot_sphere_slice(mock_catalog_tiled):
     ax.set_aspect("equal")
     #ax.view_init(0, 90)
     plt.grid(None,'minor')
-    plt.savefig('../reports/figures/3d_tiled_sim_slice_z.png')
+    plt.show()
+#    plt.savefig('../reports/figures/3d_tiled_sim_slice_z.png')
 
 def main():
     """
@@ -116,7 +118,7 @@ def main():
     
     """
 
-    mock_catalog_tiled = pd.read_hdf('../data/ECO_Vishnu_mock_catalog_tiled.h5',\
+    mock_catalog_tiled = pd.read_hdf('../data/ECO_Vishnu_mock_catalog_tiled_rsd.h5',\
                                      key='mock_catalog_tiled')
     
     mock_catalog_tiled = spherical_to_cartesian(mock_catalog_tiled)
@@ -125,3 +127,11 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+ECO = mock_catalog_tiled_rsd[(mock_catalog_tiled_rsd['ra'].\
+                          between(130.05,237.45,inclusive=False)) & \
+                         (mock_catalog_tiled_rsd['dec'].\
+                          between(-1,49.85,inclusive=False)) & \
+                         (mock_catalog_tiled_rsd['cz'].\
+                          between(2530,7470,inclusive=False)) & \
+                         (mock_catalog_tiled_rsd['M_r'] < -17.33)]

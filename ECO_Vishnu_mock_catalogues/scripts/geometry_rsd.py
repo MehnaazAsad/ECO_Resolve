@@ -8,7 +8,7 @@ Created on Thu Sep 27 16:22:26 2018
 This script makes a tiled simulation box and applies redshift-space distortions
 """
 
-from astropy.cosmology import FlatLambdaCDM
+from astropy.cosmology import LambdaCDM
 from scipy.interpolate import interp1d
 from tqdm import tqdm
 import pandas as pd
@@ -161,17 +161,18 @@ def apply_rsd(mock_catalog_tiled):
     z_min = 0
     z_max = 0.5
     dz = 10**-3
-    H0 = 70
+    H0 = 100
     omega_m = 0.25
     omega_b = 0.04
+    Tcmb0 = 2.7255
     
     redshift_arr = np.arange(z_min,z_max,dz)
-    cosmo = FlatLambdaCDM(H0,omega_m,omega_b)
+    cosmo = LambdaCDM(H0,omega_m,omega_b,Tcmb0)
     como_dist = cosmo.comoving_distance(redshift_arr)
     comodist_z_interp = interp1d(como_dist,redshift_arr)
     
-    cart_gals = mock_catalog_tiled[['x','y','z']].values
-    vel_gals = mock_catalog_tiled[['vx','vy','vz']].values
+    cart_gals = mock_catalog_tiled[['x','y','z']].values #Mpc/h
+    vel_gals = mock_catalog_tiled[['vx','vy','vz']].values #km/s
     
     dist_from_obs_arr = np.zeros(ngal)
     ra_arr = np.zeros(ngal)

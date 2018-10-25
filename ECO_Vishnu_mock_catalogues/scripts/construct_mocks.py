@@ -25,8 +25,6 @@ halocat_galcat_merged = pd.read_hdf('../data/halo_gal_Vishnu_Rockstar_macc.h5',\
                                     key='halocat_galcat_merged')
 colnames = halocat_galcat_merged.columns
 
-v_eco = 192351.36 #Volume of ECO with buffer in (Mpc/h)^3
-
 Mr_vpeak_catalog = Mr_vpeak_catalog.sort_values('M_r')
 eco_obs_catalog = eco_obs_catalog.loc[eco_obs_catalog.Re.values >= 0]
 eco_obs_catalog = eco_obs_catalog.sort_values('M_r')
@@ -55,8 +53,6 @@ mock_catalog = halocat_galcat_merged.merge(Mr_vpeak_catalog,how='inner',\
                            right_on=Mr_vpeak_catalog.index.values,\
                            right_index=True)
 mock_catalog = mock_catalog.drop(['key_0'],axis=1)
-#mock_catalog.columns = colnames + ['v_peak','M_r','logMbary',\
-#                                   'Re']
 
 mock_catalog = mock_catalog.drop(['halo_vpeak'],axis=1)
 mock_catalog.rename(columns={'vpeak': 'halo_vpeak'}, inplace=True)
