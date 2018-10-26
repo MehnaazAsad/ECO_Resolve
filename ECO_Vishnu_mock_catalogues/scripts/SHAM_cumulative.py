@@ -7,17 +7,13 @@ Created on Tue Oct 23 19:37:25 2018
 """
 from scipy.optimize import curve_fit
 from progressbar import ProgressBar
+import matplotlib.pyplot as plt
 from scipy import interpolate
 from scipy import integrate
-from matplotlib import rc
 import pandas as pd
 import numpy as np
 import math
 import csv
-
-###Formatting for plots and animation
-rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']},size=15)
-rc('text', usetex=True)
 
 ### Schechter function
 def Schechter_func(M,phi_star,M_star,alpha):
@@ -45,10 +41,10 @@ def cumu_num_dens(data,nbins,weights,volume):
     freq,edg = np.histogram(data,bins=nbins,weights=weights)
     bin_centers = 0.5*(edg[1:]+edg[:-1])
     bin_width = edg[1] - edg[0]
-    N_cumu = np.cumsum(freq)
+    N_cumu = np.cumsum(freq[::-1])[::-1]
     n_cumu = N_cumu/volume
     err_poiss = np.sqrt(N_cumu)/volume
-    return bin_centers,edg,n_cumu,err_poiss,bin_width
+    return bin_centers,edg,n_cumu,err_poiss,bin_width,freq
 
 ### Differential method
 def diff_num_dens(data,nbins,weights,volume):
@@ -134,8 +130,18 @@ halocat_galcat_merged = pd.read_hdf('../data/halo_gal_Vishnu_Rockstar_macc.h5',\
 v_sim = 130**3 #(Mpc/h)^3
 vpeak = halocat_galcat_merged.halo_vpeak.values
 nbins = num_bins(vpeak)
-bin_centers_vpeak,bin_edges_vpeak,n_vpeak,err_poiss,bin_width_vpeak = \
+bin_centers_vpeak,bin_edges_vpeak,n_vpeak,err_poiss_vpeak,bin_width_vpeak,freq = \
 cumu_num_dens(vpeak,nbins,None,v_sim)
+
+fig = plt.figure(figsize=(10,10))
+plt.xscale('log')
+plt.yscale('log')
+plt.errorbar(bin_centers_vpeak,n_vpeak,yerr=err_poiss_vpeak,fmt="ks--",ls='None',\
+             elinewidth=0.5,ecolor='k',capsize=5,capthick=0.5,markersize=4)
+plt.xlabel(r'$v_{peak}$')
+plt.ylabel(r'$\mathrm{(n \geq v_{peak})} [\mathrm{h}^{3}\mathrm{Mpc}^{-3}]$')
+plt.title(r'Vishnu Cumulative Peak Velovity Function')
+plt.savefig('../reports/figures/vpeak_cumunumdens.png')
 
 ### Interpolating 
 vpeak_n_interp_func = interpolate.InterpolatedUnivariateSpline\
