@@ -7,7 +7,6 @@ Created on Tue Oct 23 19:37:25 2018
 """
 from scipy.optimize import curve_fit
 from progressbar import ProgressBar
-import matplotlib.pyplot as plt
 from scipy import interpolate
 from scipy import integrate
 import pandas as pd
@@ -132,16 +131,6 @@ vpeak = halocat_galcat_merged.halo_vpeak.values
 nbins = num_bins(vpeak)
 bin_centers_vpeak,bin_edges_vpeak,n_vpeak,err_poiss_vpeak,bin_width_vpeak = \
 cumu_num_dens(vpeak,nbins,None,v_sim)
-
-fig = plt.figure(figsize=(10,10))
-plt.xscale('log')
-plt.yscale('log')
-plt.errorbar(bin_centers_vpeak,n_vpeak,yerr=err_poiss_vpeak,fmt="ks--",ls='None',\
-             elinewidth=0.5,ecolor='k',capsize=5,capthick=0.5,markersize=4)
-plt.xlabel(r'$v_{peak}$')
-plt.ylabel(r'$\mathrm{(n \geq v_{peak})} [\mathrm{h}^{3}\mathrm{Mpc}^{-3}]$')
-plt.title(r'Vishnu Cumulative Peak Velovity Function')
-plt.savefig('../reports/figures/vpeak_cumunumdens.png')
 
 ### Interpolating 
 vpeak_n_interp_func = interpolate.InterpolatedUnivariateSpline\
