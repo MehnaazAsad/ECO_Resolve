@@ -44,7 +44,7 @@ def cumu_num_dens(data,nbins,weights,volume):
     N_cumu = np.cumsum(freq[::-1])[::-1]
     n_cumu = N_cumu/volume
     err_poiss = np.sqrt(N_cumu)/volume
-    return bin_centers,edg,n_cumu,err_poiss,bin_width,freq
+    return bin_centers,edg,n_cumu,err_poiss,bin_width
 
 ### Differential method
 def diff_num_dens(data,nbins,weights,volume):
@@ -130,7 +130,7 @@ halocat_galcat_merged = pd.read_hdf('../data/halo_gal_Vishnu_Rockstar_macc.h5',\
 v_sim = 130**3 #(Mpc/h)^3
 vpeak = halocat_galcat_merged.halo_vpeak.values
 nbins = num_bins(vpeak)
-bin_centers_vpeak,bin_edges_vpeak,n_vpeak,err_poiss_vpeak,bin_width_vpeak,freq = \
+bin_centers_vpeak,bin_edges_vpeak,n_vpeak,err_poiss_vpeak,bin_width_vpeak = \
 cumu_num_dens(vpeak,nbins,None,v_sim)
 
 fig = plt.figure(figsize=(10,10))
