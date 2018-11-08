@@ -72,7 +72,8 @@ def create_halocat_from_snapshot(col_ids,col_names,snapshot_file,\
                                   halo_id=rockstar_table.halo_id.values,\
                                   halo_mvir=rockstar_table.halo_mvir.values,\
                                   halo_vacc=rockstar_table.halo_vacc.values,\
-                                  halo_vpeak=rockstar_table.halo_vpeak.values)
+                                  halo_vpeak=rockstar_table.halo_vpeak.values,\
+                                  halo_vmax=rockstar_table.halo_vmax.values)
 
     halocat_file_path = '/home/asadm2/.astropy/cache/halotools/halo_catalogs'\
                     '/vishnu/rockstar/vishnu_rockstar.hdf5'
