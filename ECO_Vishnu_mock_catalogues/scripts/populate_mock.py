@@ -225,12 +225,12 @@ def args_parser():
                         help='True if creating halocat from snapshot.'\
                         'False if accessing stored halo catalog.'\
                         'Default is False.',default=False)
-    parser.add_argument('-column_ids',nargs='+',type=int,help='Column IDs to '\
-                        'extract from snapshot',default=None)
-    parser.add_argument('-column_names',nargs='+',type=str,help='Names of '\
-                        'columns to extract',default=None)
-    parser.add_argument('-processing_notes',type=str,help='Note to add to '\
-                        'halo catalog cache. Must be one string.',default=None)
+#    parser.add_argument('-column_ids',nargs='+',type=int,help='Column IDs to '\
+#                        'extract from snapshot',default=None)
+#    parser.add_argument('-column_names',nargs='+',type=str,help='Names of '\
+#                        'columns to extract',default=None)
+#    parser.add_argument('-processing_notes',type=str,help='Note to add to '\
+#                        'halo catalog cache. Must be one string.',default=None)
     args = parser.parse_args()
     return args
 
@@ -257,11 +257,11 @@ def main(args):
                        
 
     if args.halocat_from_snapshot:
-        for val in args.column_ids:
-            cols_to_use.append(val)
-        for name in args.column_names:
-            col_names.append(name)
-        processing_notes+=args.processing_notes
+#        for val in args.column_ids:
+#            cols_to_use.append(val)
+#        for name in args.column_names:
+#            col_names.append(name)
+#        processing_notes+=args.processing_notes
         
         print('Creating halo catalog from snapshot')
         halocat_file_path = create_halocat_from_snapshot(cols_to_use,\
