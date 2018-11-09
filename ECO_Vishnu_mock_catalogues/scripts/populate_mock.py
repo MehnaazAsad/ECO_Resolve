@@ -249,7 +249,7 @@ def main(args):
              'halo_rs','halo_vmax','halo_x','halo_y','halo_z','halo_vx',\
              'halo_vy','halo_vz','halo_m200b','halo_macc','halo_mpeak',\
              'halo_vacc','halo_vpeak']
-    snapshot_file = 'hlist_0.98169.list.gz'
+    snapshot_file = '../data/hlist_0.98169.list.gz'
     processing_notes = 'Positions, IDs (HID,PID,UPID),velocities '\
                        '(vpeak, vacc and vmax), radius (rvir,rs) and mass '\
                        'information extracted (mvir,macc,m200,mpeak) '\
@@ -289,7 +289,7 @@ def main(args):
     print('Adding centrals/satellites flag')
     halocat_galcat_merged = centrals_satellites_flag(halocat_galcat_merged)
     print('Saving galaxy catalog as hdf5 file')
-    halocat_galcat_merged.to_hdf('../halo_gal_Vishnu_Rockstar_{0}.h5'.format\
+    halocat_galcat_merged.to_hdf('../data/halo_gal_Vishnu_Rockstar_{0}.h5'.format\
                                  (args.populate_mock_key.split('_')[1]),\
                                  key='halocat_galcat_merged',mode='w')
     
